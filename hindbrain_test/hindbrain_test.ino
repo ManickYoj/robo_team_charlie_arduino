@@ -1,5 +1,4 @@
 #include <Servo.h>
-
 //Hind Brain Test
 int ledPin = 13;
 int actOutPin = 4;
@@ -9,7 +8,7 @@ int sharpDistance1 = 0;
 char command = 'g';
 char hBrainStatus ='r';
 int motorpin1= 6; //PWM pins for right and left motors
-int motorpin2=7; 
+int motorpin2=7;
 Servo motor1;
 Servo motor2;
 
@@ -48,14 +47,15 @@ void loop() {
   toggleActPin4(command);
 
   //Act: run motors
-  if (command == 'g'){
-    int pos=0;
-    for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-    // in steps of 1 degree
-      motor1.write(pos);              // tell servo to go to position in variable 'pos'
-      //motor2.write(pos);
-      delay(15);                       // waits 15ms for the servo to reach the position
-    }
+  //if (command == 'g'){
+  int pos=0;
+  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
+  // in steps of 1 degree
+    motor1.write(pos);              // tell servo to go to position in variable 'pos'
+    motor2.write(pos);
+    Serial.println(pos);
+    delay(15);                       // waits 15ms for the servo to reach the position
+    //}
 //    for (pos = 0; pos <= 180; pos += 1) {
 //    // in steps of 1 degree
 //      //motor1.write(pos);

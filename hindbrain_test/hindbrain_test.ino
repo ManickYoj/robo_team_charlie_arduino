@@ -1,14 +1,14 @@
 #include <Servo.h>
-
 //Hind Brain Test
 int ledPin = 13;
 int actOutPin = 4;
 int eStopPin = 5;
 int delayPeriod = 100;
+int sharpDistance1 = 0;
 char command = 'g';
 char hBrainStatus ='r';
 int motorpin1= 6; //PWM pins for right and left motors
-int motorpin2=7; 
+int motorpin2=7;
 Servo motor1;
 Servo motor2;
 
@@ -32,10 +32,13 @@ void loop() {
     Serial.println(command);
   }
   // Sense: Read Robot Sensors
-  if (readEstop()==1){
-    hBrainStatus = 'e';
-  }
+//  if (readEstop()==1){
+//    hBrainStatus = 'e';
+//  }
   else hBrainStatus = 'r';
+  //Serial.println (sharpRange(sharpDistance1));
+  float SharpRange1 = sharpRange(sharpDistance1);
+  
   //Think:Run low level cognition ad safety code
   if (command!='s'){
     blink();
@@ -44,14 +47,21 @@ void loop() {
   toggleActPin4(command);
 
   //Act: run motors
-  if (command == 'g'){
-    int pos=0;
-      for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
-    // in steps of 1 degree
-      motor1.write(pos);              // tell servo to go to position in variable 'pos'
-      motor2.write(pos);
-      delay(15);                       // waits 15ms for the servo to reach the position
-    }
+  //if (command == 'g'){
+  int pos=0;
+  for (pos = 0; pos <= 180; pos += 1) { // goes from 0 degrees to 180 degrees
+  // in steps of 1 degree
+    motor1.write(pos);              // tell servo to go to position in variable 'pos'
+    motor2.write(pos);
+    Serial.println(pos);
+    delay(15);                       // waits 15ms for the servo to reach the position
+    //}
+//    for (pos = 0; pos <= 180; pos += 1) {
+//    // in steps of 1 degree
+//      //motor1.write(pos);
+//      motor2.write(pos);
+//      delay(15);
+//    } 
   }
   // write status data up to midbrain
   if (command == 's'){
@@ -67,6 +77,12 @@ boolean readEstop(){
   return eStopTriggered;
 }
 
+float sharpRange (int sensornum) {
+  int rawData = analogRead(sensornum);
+  float volts = rawData * 0.0048828125;
+  float range = 65*pow(volts,-1.10);
+  return range;
+}
 void blink(){
     digitalWrite (ledPin, HIGH);
     delay (delayPeriod);
